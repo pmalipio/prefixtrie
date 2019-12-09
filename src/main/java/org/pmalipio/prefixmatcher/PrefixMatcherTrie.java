@@ -18,13 +18,47 @@ under the License.
  */
 package org.pmalipio.prefixmatcher;
 
+
+import java.util.Collection;
+import java.util.Collections;
+
 public class PrefixMatcherTrie {
 
-    private PrefixMatcherTrie() {
+    StringTrieNode root = new StringTrieNode('_');
+
+    private PrefixMatcherTrie(String... strings) {
+        for (int i = 0; i < strings.length; i++) {
+            String str = strings[i];
+            StringTrieNode prevNode = root;
+            for (int j = 0; j < str.length(); j ++) {
+                StringTrieNode n = prevNode.getChild(str.charAt(j));
+                if (n == null) {
+                    n = new StringTrieNode(str.charAt(j));
+                    prevNode.addChild(n);
+                }
+                n.addIdx(i);
+                prevNode = n;
+            }
+        }
     }
 
-    public static CompiledStrings compile(final String... strings) {
-        return new CompiledStrings(strings);
+    public Collection<Integer> match(final String match) {
+        StringTrieNode prevNode = root;
+        if (root.isLeaf()) {
+            return Collections.emptySet();
+        }
+        for (int j = 0; j < match.length(); j ++) {
+            Character c = match.charAt(j);
+            StringTrieNode n = prevNode.getChild(c);
+            if (n == null) {
+                return Collections.emptySet();
+            }
+            prevNode = n;
+        }
+        return prevNode.getIdxs();
     }
 
+    public static PrefixMatcherTrie builder(final String... strings) {
+        return new PrefixMatcherTrie(strings);
+    }
 }

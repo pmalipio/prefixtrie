@@ -22,12 +22,12 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 
-public class StringMatchingNode {
+public class StringTrieNode {
     private Character ch;
     private Collection<Integer> idxs;
-    private HashMap<Character, StringMatchingNode> children;
+    private HashMap<Character, StringTrieNode> children;
 
-    public StringMatchingNode(final Character ch) {
+    public StringTrieNode(final Character ch) {
         this.ch = ch;
         idxs = new HashSet<>();
         children = new HashMap<>();
@@ -41,7 +41,7 @@ public class StringMatchingNode {
         return idxs;
     }
 
-    public StringMatchingNode getChild(final Character ch) {
+    public StringTrieNode getChild(final Character ch) {
         try {
             return children.get(ch);
         } catch (ArrayIndexOutOfBoundsException ex) {
@@ -49,7 +49,7 @@ public class StringMatchingNode {
         }
     }
 
-    public void addChild(final StringMatchingNode node) {
+    public void addChild(final StringTrieNode node) {
         children.put(node.ch, node);
     }
 

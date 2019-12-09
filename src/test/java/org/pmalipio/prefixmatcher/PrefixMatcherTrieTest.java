@@ -25,10 +25,27 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertTrue;
+
 public class PrefixMatcherTrieTest {
 
     @Test
-    public void compareWithHashmap() {
+    public void basicTest() {
+        final PrefixMatcherTrie trie = PrefixMatcherTrie.builder(
+                "aabbcc",
+                "aabbdd",
+                "bbccdd",
+                "abcdbc"
+        );
+
+        Collection<Integer> aab = trie.match("aab");
+
+        assertTrue(aab.contains(0));
+        assertTrue(aab.contains(1));
+    }
+
+    @Test
+    public void compareFullMatchWithHashmap() {
         final int size = 100000;
         String[] array = new String[size];
         Map<String, String> map = new HashMap<>();
@@ -38,10 +55,10 @@ public class PrefixMatcherTrieTest {
             map.put(s, s);
         };
 
-        CompiledStrings compiled = PrefixMatcherTrie.compile(array);
+        PrefixMatcherTrie compiled = PrefixMatcherTrie.builder(array);
         long start = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
-            Collection<Integer> acac = compiled.matches(array[i]);
+            Collection<Integer> acac = compiled.match(array[i]);
         }
         long total = System.currentTimeMillis() - start;
         System.out.println("My string matcher: " + total);
