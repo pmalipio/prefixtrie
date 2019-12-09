@@ -1,4 +1,4 @@
-# prefixtrie
+# String Prefix Matcher Trie
 
 Usage examples:
 
