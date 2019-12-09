@@ -18,6 +18,8 @@ under the License.
  */
 package org.pmalipio.prefixmatcher;
 
+import org.apache.commons.collections4.Trie;
+import org.apache.commons.collections4.trie.PatriciaTrie;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.junit.Test;
 
@@ -66,22 +68,52 @@ public class PrefixMatcherTrieTest {
             String s = RandomStringUtils.randomAlphabetic(20);
             array[i] = s;
             map.put(s, s);
-        };
+        }
 
         PrefixMatcherTrie compiled = PrefixMatcherTrie.builder(array);
+
         long start = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
-            Collection<Integer> acac = compiled.match(array[i]);
+            compiled.match(array[i]);
         }
         long total = System.currentTimeMillis() - start;
         System.out.println("My string matcher: " + total);
 
         start = System.currentTimeMillis();
         for (int i = 0; i < size; i++) {
-            String acac = map.get(array[i]);
+            map.get(array[i]);
         }
         total = System.currentTimeMillis() - start;
         System.out.println("Hash map matcher: " + total);
+    }
+
+    @Test
+    public void compareWithPatriciaTrie() {
+        final Trie<String, String> pTrie = new PatriciaTrie<>();
+        final int size = 100000;
+        String[] array = new String[size];
+        for (int i = 0; i < size; i++) {
+            String s = RandomStringUtils.randomAlphabetic(20);
+            array[i] = s;
+            pTrie.put(s, s);
+        }
+
+        PrefixMatcherTrie compiled = PrefixMatcherTrie.builder(array);
+
+        long start = System.currentTimeMillis();
+        for (int i = 0; i < size; i++) {
+            compiled.match(array[i]);
+        }
+        long total = System.currentTimeMillis() - start;
+        System.out.println("My string matcher: " + total);
+
+        start = System.currentTimeMillis();
+        for (int i = 0; i < size; i++) {
+            pTrie.prefixMap(array[i]);
+        }
+        total = System.currentTimeMillis() - start;
+        System.out.println("PatriciaTrie: " + total);
+
     }
 }
 
