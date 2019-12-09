@@ -21,11 +21,12 @@ package org.pmalipio.prefixmatcher;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 
 public class StringTrieNode {
     private Character ch;
     private Collection<Integer> idxs;
-    private HashMap<Character, StringTrieNode> children;
+    private Map<Character, StringTrieNode> children;
 
     public StringTrieNode(final Character ch) {
         this.ch = ch;
