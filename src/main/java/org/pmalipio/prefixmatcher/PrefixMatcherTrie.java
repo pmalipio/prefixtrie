@@ -24,11 +24,13 @@ import java.util.Collections;
 
 public class PrefixMatcherTrie {
 
-    StringTrieNode root = new StringTrieNode('_');
+    final StringTrieNode root;
 
-    private PrefixMatcherTrie(String... strings) {
+    private PrefixMatcherTrie(final String... strings) {
+        root = new StringTrieNode('_');
         for (int i = 0; i < strings.length; i++) {
-            String str = strings[i];
+            final String str = strings[i];
+            root.addIdx(i);
             StringTrieNode prevNode = root;
             for (int j = 0; j < str.length(); j ++) {
                 StringTrieNode n = prevNode.getChild(str.charAt(j));
@@ -46,16 +48,19 @@ public class PrefixMatcherTrie {
         StringTrieNode prevNode = root;
         if (root.isLeaf()) {
             return Collections.emptySet();
-        }
-        for (int j = 0; j < match.length(); j ++) {
-            Character c = match.charAt(j);
-            StringTrieNode n = prevNode.getChild(c);
-            if (n == null) {
-                return Collections.emptySet();
+        } else if (match.isEmpty()) {
+            return root.getIdxs();
+        } else {
+            for (int j = 0; j < match.length(); j++) {
+                Character c = match.charAt(j);
+                StringTrieNode n = prevNode.getChild(c);
+                if (n == null) {
+                    return Collections.emptySet();
+                }
+                prevNode = n;
             }
-            prevNode = n;
+            return prevNode.getIdxs();
         }
-        return prevNode.getIdxs();
     }
 
     public static PrefixMatcherTrie builder(final String... strings) {

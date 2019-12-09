@@ -25,7 +25,7 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.assertArrayEquals;
 
 public class PrefixMatcherTrieTest {
 
@@ -33,15 +33,28 @@ public class PrefixMatcherTrieTest {
     public void basicTest() {
         final PrefixMatcherTrie trie = PrefixMatcherTrie.builder(
                 "aabbcc",
-                "aabbdd",
+                "aabcdd",
                 "bbccdd",
                 "abcdbc"
         );
 
-        Collection<Integer> aab = trie.match("aab");
+        final Collection<Integer> aab = trie.match("aab");
+        assertArrayEquals(new Integer[]{0, 1}, aab.toArray());
 
-        assertTrue(aab.contains(0));
-        assertTrue(aab.contains(1));
+        final Collection<Integer> a = trie.match("a");
+        assertArrayEquals(new Integer[]{0, 1, 3}, a.toArray());
+
+        final Collection<Integer> empty = trie.match("");
+        assertArrayEquals(new Integer[]{0, 1, 2, 3}, empty.toArray());
+
+        final Collection<Integer> bbccdd = trie.match("bbccdd");
+        assertArrayEquals(new Integer[]{2}, bbccdd.toArray());
+
+        final Collection<Integer> xyz = trie.match("xyz");
+        assertArrayEquals(new Integer[]{}, xyz.toArray());
+
+        final Collection<Integer> aabbccwwwwwwwwww = trie.match("aabbccwwwwwwwwww");
+        assertArrayEquals(new Integer[]{}, aabbccwwwwwwwwww.toArray());
     }
 
     @Test
